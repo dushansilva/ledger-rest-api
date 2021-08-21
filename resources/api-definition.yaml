@@ -1,0 +1,127 @@
+---
+openapi: 3.0.0
+info:
+  title: Ledger API
+  description: This api for getting lease information
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: /
+paths:
+  /ledger:
+    get:
+      summary: get ledger
+      description: |
+        get ledger details
+      parameters:
+      - name: start_date
+        in: query
+        description: Start date
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: end_date
+        in: query
+        description: end date
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: frequency
+        in: query
+        description: Payment frequency
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: weekly_rent
+        in: query
+        description: Weekly rent
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: timezone
+        in: query
+        description: valid timezone
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LedgerResponse'
+        "400":
+          description: Bad input parameter
+        "401":
+          description: Authentication failed
+        "500":
+          description: Exception thrown in server side
+      security:
+      - BearerAuth: []
+  /ledger/authenticate:
+    post:
+      description: |
+        get jwt token
+      responses:
+        "200":
+          description: returns a JWT Token to be used for ledger api
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        "500":
+          description: Exception thrown in server side
+components:
+  schemas:
+    AuthenticationResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/AuthenticationResponse_data'
+    LedgerResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Data'
+    Data:
+      type: object
+      properties:
+        startDate:
+          type: string
+          example: 2021-03-02T15:00:00.000Z
+        endDate:
+          type: string
+          example: 2021-03-02T15:00:00.000Z
+        amount:
+          type: integer
+    AuthenticationResponse_data:
+      type: object
+      properties:
+        token:
+          type: string
+          example: eyJhbG
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer

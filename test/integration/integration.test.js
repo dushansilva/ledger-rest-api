@@ -121,6 +121,13 @@ describe('Test authentication', () => {
       .query(requestBody);
     expect(response.status).toBe(401);
   });
+
+  test('Check token generation', async () => {
+    const response = await request(app)
+      .post('/ledger/authenticate')
+      .query(requestBody);
+    expect(response.status).toBe(200);
+  });
 });
 
 describe('Test ledger api validations', () => {
