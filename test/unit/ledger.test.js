@@ -1,5 +1,5 @@
 const { DateTime } = require('luxon');
-const { handleForthnighltyWeekly, handleMonthly } = require('../../api/services/ledger');
+const { handleFortnightlyWeekly, handleMonthly } = require('../../api/services/ledger');
 const { ledgerInputValidation } = require('../../api/services/validation');
 
 describe('Test ledger validations', () => {
@@ -71,7 +71,8 @@ describe('Test Forthnighly & weekly calculations', () => {
   const timeZone = 'America/Los_Angeles';
   const startDateF = DateTime.fromISO(startDate).setZone(timeZone);
   const endDateF = DateTime.fromISO(endDate).setZone(timeZone);
-  const output = handleForthnighltyWeekly(startDateF, endDateF, amount, frequency);
+  const output = handleFortnightlyWeekly(startDateF, endDateF, amount, frequency);
+
   const expected = [
     {
       startDate: '2021-04-02T08:00:00.000-07:00',
@@ -108,7 +109,7 @@ describe('Test Forthnighly & weekly calculations', () => {
   ];
 
   const frequency2 = 'WEEKLY';
-  const output2 = handleForthnighltyWeekly(startDateF, endDateF, amount, frequency2);
+  const output2 = handleFortnightlyWeekly(startDateF, endDateF, amount, frequency2);
   test('Check Weekly normal case ', () => {
     expect(output2).not.toEqual(null);
     expect(output2).toEqual(expected2);
@@ -116,7 +117,7 @@ describe('Test Forthnighly & weekly calculations', () => {
 
   const startDate3 = '2021-04-10T15:00:00.000Z';
   const startDateF3 = DateTime.fromISO(startDate3).setZone(timeZone);
-  const output3 = handleForthnighltyWeekly(startDateF3, endDateF, amount, frequency);
+  const output3 = handleFortnightlyWeekly(startDateF3, endDateF, amount, frequency);
   const expected3 = [
     {
       startDate: '2021-04-10T08:00:00.000-07:00',
@@ -131,7 +132,7 @@ describe('Test Forthnighly & weekly calculations', () => {
 
   const startDate4 = '2021-04-18T15:00:00.000Z';
   const startDateF4 = DateTime.fromISO(startDate4).setZone(timeZone);
-  const output4 = handleForthnighltyWeekly(startDateF4, endDateF, amount, frequency);
+  const output4 = handleFortnightlyWeekly(startDateF4, endDateF, amount, frequency);
   const expected4 = [
     {
       startDate: '2021-04-18T08:00:00.000-07:00',
@@ -210,5 +211,23 @@ describe('Test Monthly calculations', () => {
   test('Check Monthly less than 30 days case', () => {
     expect(output3).not.toEqual(null);
     expect(output3).toEqual(expected3);
+  });
+
+  test('Check service method validation', () => {
+    expect(() => {
+      handleFortnightlyWeekly('test', endDateF, amount, frequency);
+    }).toThrow('Invalid ledger input');
+  });
+
+  test('Check service method frequency validation', () => {
+    expect(() => {
+      handleFortnightlyWeekly(startDateF, endDateF, amount, 'MONTHLY');
+    }).toThrow('Invalid ledger input');
+  });
+
+  test('Check service method validation', () => {
+    expect(() => {
+      handleMonthly(startDateF, endDateF, 'test');
+    }).toThrow('Invalid ledger input');
   });
 });

@@ -20,12 +20,20 @@ const calculateRemainder = (weeklyAmount, remainingDays) => {
   return round(remainingDays * dailyAmount, 2);
 };
 
-exports.handleForthnighltyWeekly = (startDate, endDate, weeklyRent, frequency) => {
+/**
+ * This is used to calculate the weekly and forthnightly line items
+ * @param {luxonDate} startDate - starting date
+ * @param {luxonDate} endDate - ending date
+ * @param {string} frequency - frequency as WEELKLY
+ * @param {int} weeklyRent - weekly rent amount
+ * @returns {array}
+ */
+exports.handleFortnightlyWeekly = (startDate, endDate, weeklyRent, frequency) => {
   const result = ledgerInputValidation({
     startDate, endDate, frequency, weeklyRent,
   });
 
-  if (!result.isValid) {
+  if (!result.isValid || frequency === FREQUENCY_TYPES.MONTHLY) {
     throw handleError('Invalid ledger input');
   }
 
@@ -63,6 +71,13 @@ exports.handleForthnighltyWeekly = (startDate, endDate, weeklyRent, frequency) =
   return array;
 };
 
+/**
+ * This is used to calculate the monthly line items
+ * @param {luxonDate} startDate - starting date
+ * @param {luxonDate} endDate - ending date
+ * @param {int} weeklyRent - weekly rent amount
+ * @returns {array}
+ */
 exports.handleMonthly = (startDate, endDate, weeklyRent) => {
   const result = ledgerInputValidation({
     startDate, endDate, frequency: FREQUENCY_TYPES.MONTHLY, weeklyRent,

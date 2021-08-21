@@ -2,6 +2,12 @@ const Joi = require('joi');
 const { DateTime } = require('luxon');
 const { FREQUENCY_TYPES } = require('../constants/ledger');
 
+/**
+ * This is used in the validatidaton middlware
+ * @param {object} data - object that contains startDate, endDate,
+ *  weeklyRent,timezone and frequency
+ * @returns {object}
+ */
 exports.handleLedgerReqValidation = (data) => {
   const { startDate, endDate } = data;
   const schema = Joi.object({
@@ -40,6 +46,11 @@ exports.handleLedgerReqValidation = (data) => {
   return { isValid: true };
 };
 
+/**
+ * This is used to validate inputs for methods
+ * @param {object} data - object that contains startDate, endDate, weeklyRent and frequency
+ * @returns {object}
+ */
 exports.ledgerInputValidation = (data) => {
   const { startDate, endDate } = data;
   const schema = Joi.object({
