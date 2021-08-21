@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start-dev": "NODE_ENV=development nodemon server.js",
     "start-prod": "NODE_ENV=production node server.js"
   },
@@ -14,12 +14,15 @@
     "eslint": "^7.32.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.24.0",
+    "jest": "^27.0.6",
     "nodemon": "^2.0.12"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "luxon": "^2.0.2",
     "morgan": "^1.10.0"

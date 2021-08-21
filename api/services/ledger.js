@@ -1,7 +1,6 @@
 const { Interval } = require('luxon');
 const { round } = require('lodash');
 const { FREQUENCY_TYPES } = require('../constants/ledger');
-const { handleError } = require('./utility');
 
 const calculateWeeklyAmount = (weeklyAmount) => weeklyAmount;
 
@@ -12,22 +11,6 @@ const calculateMonthlyAmount = (weeklyAmount) => {
   const yearly = daily * 365;
   const monthly = yearly / 12;
   return monthly;
-};
-
-exports.calculateLineItemAmount = (frequency, weeklyAmount) => {
-  switch (frequency) {
-    case FREQUENCY_TYPES.WEEKLY:
-      calculateWeeklyAmount(weeklyAmount);
-      break;
-    case FREQUENCY_TYPES.FORTNIGHTLY:
-      calculateFortnightlyAmount(weeklyAmount);
-      break;
-    case FREQUENCY_TYPES.MONTHLY:
-      calculateMonthlyAmount(weeklyAmount);
-      break;
-    default:
-      throw handleError('', 'Invalid frequency type', '');
-  }
 };
 
 const calculateRemainder = (weeklyAmount, remainingDays) => {
@@ -51,66 +34,6 @@ exports.handleForthnighltyWeekly = (startDate, endDate, weeklyAmount, frequency)
   for (let index = 1; index <= noOfFullPayments; index += 1) {
     const paymentStart = nextStart;
     const paymentEnd = paymentStart.plus({ days: days - 1 });
-    nextStart = paymentEnd.plus({ days: 1 });
-    const payment = {
-      startDate: paymentStart.toISODate(),
-      endDate: paymentEnd.toISODate(),
-      amount,
-    };
-    array.push(payment);
-  }
-  if (remainingDays > 0) {
-    const remainingAmount = {
-      startDate: nextStart.toISODate(),
-      endDate: endDate.toISODate(),
-      amount: calculateRemainder(weeklyAmount, remainingDays + 1),
-    };
-    array.push(remainingAmount);
-  }
-  return array;
-};
-
-exports.handleForthnighlty = (startDate, endDate, weeklyAmount) => {
-  const intervals = round(Interval.fromDateTimes(startDate, endDate).length('days'));
-  const remainingDays = intervals % 14;
-  const noOfFullPayments = (intervals - remainingDays) / 14;
-  const amount = calculateFortnightlyAmount(weeklyAmount);
-  const array = [];
-
-  let nextStart = startDate;
-  for (let index = 1; index <= noOfFullPayments; index += 1) {
-    const paymentStart = nextStart;
-    const paymentEnd = paymentStart.plus({ days: 13 });
-    nextStart = paymentEnd.plus({ days: 1 });
-    const payment = {
-      startDate: paymentStart.toISODate(),
-      endDate: paymentEnd.toISODate(),
-      amount,
-    };
-    array.push(payment);
-  }
-  if (remainingDays > 0) {
-    const remainingAmount = {
-      startDate: nextStart.toISODate(),
-      endDate: endDate.toISODate(),
-      amount: calculateRemainder(weeklyAmount, remainingDays + 1),
-    };
-    array.push(remainingAmount);
-  }
-  return array;
-};
-
-exports.handleWeekly = (startDate, endDate, weeklyAmount) => {
-  const intervals = round(Interval.fromDateTimes(startDate, endDate).length('days'));
-  const remainingDays = intervals % 7;
-  const noOfFullPayments = (intervals - remainingDays) / 7;
-  const amount = calculateWeeklyAmount(weeklyAmount);
-  const array = [];
-
-  let nextStart = startDate;
-  for (let index = 1; index <= noOfFullPayments; index += 1) {
-    const paymentStart = nextStart;
-    const paymentEnd = paymentStart.plus({ days: 6 });
     nextStart = paymentEnd.plus({ days: 1 });
     const payment = {
       startDate: paymentStart.toISODate(),
