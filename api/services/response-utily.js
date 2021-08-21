@@ -16,7 +16,8 @@ exports.handleErrorResponse = (res, code, body) => {
 exports.handleValidationResponse = (res, code, error) => {
   const response = {
     code,
-    message: error,
+    message: error.message,
+    detail: error.details,
   };
   res.status(code).json(response);
 };
