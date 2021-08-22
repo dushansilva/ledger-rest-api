@@ -24,7 +24,7 @@ const calculateRemainder = (weeklyAmount, remainingDays) => {
  * This is used to calculate the weekly and forthnightly line items
  * @param {luxonDate} startDate - starting date
  * @param {luxonDate} endDate - ending date
- * @param {string} frequency - frequency as WEELKLY
+ * @param {string} frequency - frequency as WEELKLY or Fortnightly
  * @param {int} weeklyRent - weekly rent amount
  * @returns {array}
  */

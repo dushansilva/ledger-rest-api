@@ -9,7 +9,7 @@ exports.generateJWT = () => {
   const iss = 'https://localhost:3000/oauth2/token';
   const sub = 'dushan';
   const aud = 'htpp://localhost';
-  // vality period 2h
+  // vality period 1h
   const exp = Math.floor(Date.now() / 1000) + (60 * 60);
   const algorithm = 'RS256';
   const payload = {
